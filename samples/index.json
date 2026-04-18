@@ -1,0 +1,7 @@
+{
+  "samples": [
+    { "id": "flat_short",     "label": "Flat Short — beginner, par 2"     },
+    { "id": "double_trouble", "label": "Double Trouble — intermediate"     },
+    { "id": "wall_maze",      "label": "Wall Maze — intermediate, par 4"   }
+  ]
+}

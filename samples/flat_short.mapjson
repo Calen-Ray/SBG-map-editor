@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "id": "flat_short",
+  "displayName": "Flat Short",
+  "author": "SBGMapSamples",
+  "par": 2,
+  "difficulty": "Beginner",
+  "canvas": "Coast/TwinBeach",
+  "description": "The simplest playable map: flat ground, tee, hole 8m ahead.",
+  "cleanCanvas": true,
+  "build": [
+    { "op": "moveTee",    "pos": [0, 0, 0] },
+    { "op": "moveHole",   "pos": [0, 0, 8] },
+    { "op": "spawnPlane", "pos": [0, -0.05, 4], "scale": [2, 1, 2], "rotY": 0 }
+  ]
+}

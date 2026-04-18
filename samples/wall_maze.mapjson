@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "id": "wall_maze",
+  "displayName": "Wall Maze",
+  "author": "SBGMapSamples",
+  "par": 4,
+  "difficulty": "Intermediate",
+  "canvas": "Coast/TwinBeach",
+  "description": "A series of staggered walls the player must navigate around to reach the hole.",
+  "cleanCanvas": true,
+  "build": [
+    { "op": "moveTee",    "pos": [0, 0, 0] },
+    { "op": "moveHole",   "pos": [0, 0, 22] },
+    { "op": "spawnPlane", "pos": [0, -0.05, 11], "scale": [3, 1, 3], "rotY": 0 },
+    { "op": "spawnCube",  "pos": [-2, 1,  6], "scale": [4, 2, 0.5], "rotY": 0 },
+    { "op": "spawnCube",  "pos": [ 2, 1, 12], "scale": [4, 2, 0.5], "rotY": 0 },
+    { "op": "spawnCube",  "pos": [-2, 1, 18], "scale": [4, 2, 0.5], "rotY": 0 }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "id": "double_trouble",
+  "displayName": "Double Trouble",
+  "author": "SBGMapSamples",
+  "par": 3,
+  "difficulty": "Intermediate",
+  "canvas": "Coast/TwinBeach",
+  "description": "Two cups separated by a wall. Pick your line.",
+  "cleanCanvas": true,
+  "build": [
+    { "op": "moveTee",    "pos": [0, 0, 0] },
+    { "op": "moveHole",   "pos": [-3, 0, 10] },
+    { "op": "spawnHole",  "pos": [ 3, 0, 10] },
+    { "op": "spawnPlane", "pos": [0, -0.05, 6],  "scale": [2, 1, 2], "rotY": 0 },
+    { "op": "spawnCube",  "pos": [0, 1, 8], "scale": [0.4, 2, 4], "rotY": 0 }
+  ]
+}

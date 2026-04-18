@@ -1,0 +1,88 @@
+name: CI
+
+# Smoke checks for a static site: every .js file must parse, every sample .mapjson must be
+# valid JSON with the expected envelope shape, and the index.json the editor fetches must
+# enumerate files that actually exist. Cheap — runs in ~10s.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse every JS module
+        run: |
+          set -e
+          for f in js/*.js; do
+            echo "node --check $f"
+            node --check "$f"
+          done
+
+      - name: Validate sample manifests + JSON shape
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sys
+
+          errors = []
+          samples_dir = pathlib.Path("samples")
+          index = json.loads((samples_dir / "index.json").read_text())
+          seen = set()
+          for entry in index.get("samples", []):
+              sid = entry.get("id")
+              if not sid:
+                  errors.append(f"index.json entry missing id: {entry}")
+                  continue
+              if sid in seen:
+                  errors.append(f"duplicate sample id in index.json: {sid}")
+              seen.add(sid)
+              path = samples_dir / f"{sid}.mapjson"
+              if not path.exists():
+                  errors.append(f"index.json references missing file: {path}")
+                  continue
+              data = json.loads(path.read_text())
+              for key in ("schema", "id", "displayName", "par", "canvas", "build"):
+                  if key not in data:
+                      errors.append(f"{path}: missing '{key}'")
+              if data.get("id") != sid:
+                  errors.append(f"{path}: id '{data.get('id')}' != filename '{sid}'")
+              if not isinstance(data.get("build"), list):
+                  errors.append(f"{path}: build must be an array")
+
+          # Every .mapjson under samples/ must be in the index (catches orphans).
+          for mj in samples_dir.glob("*.mapjson"):
+              if mj.stem not in seen:
+                  errors.append(f"{mj}: not listed in index.json")
+
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+          print(f"OK — {len(seen)} samples valid")
+          PY
+
+      - name: Static HTTP smoke (index + each module + each sample)
+        run: |
+          set -e
+          python3 -m http.server 8765 &
+          SERVER_PID=$!
+          # Give it a moment to bind.
+          for _ in 1 2 3 4 5; do curl -s -o /dev/null "http://127.0.0.1:8765/" && break; sleep 0.2; done
+          fail=0
+          check() {
+            code=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:8765$1")
+            printf "%s  %s\n" "$code" "$1"
+            [ "$code" = "200" ] || fail=1
+          }
+          check "/"
+          check "/index.html"
+          check "/css/app.css"
+          for f in js/*.js;        do check "/$f"; done
+          for f in samples/*.mapjson; do check "/$f"; done
+          check "/samples/index.json"
+          kill $SERVER_PID 2>/dev/null || true
+          exit $fail

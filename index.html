@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SBG Map Editor</title>
+  <link rel="stylesheet" href="./css/app.css" />
+</head>
+<body>
+  <header id="top-bar">
+    <div class="brand">SBG Map Editor</div>
+    <div class="meta">
+      <label>ID       <input id="meta-id"          type="text" placeholder="my-first-map" /></label>
+      <label>Name     <input id="meta-displayName" type="text" placeholder="My First Map" /></label>
+      <label>Author   <input id="meta-author"      type="text" placeholder="YourName" /></label>
+      <label>Version  <input id="meta-version"     type="text" value="0.1.0" /></label>
+      <label>Par      <input id="meta-par"         type="number" min="1" value="3" /></label>
+      <label>Difficulty
+        <select id="meta-difficulty">
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Expert">Expert</option>
+        </select>
+      </label>
+      <label>Canvas   <select id="meta-canvas"></select></label>
+      <label class="checkbox">
+        <input id="meta-cleanCanvas" type="checkbox" />
+        Clean canvas
+        <span class="hint" title="Hide the canvas scene's decor (trees, terrain) so only your spawned geometry is present.">(?)</span>
+      </label>
+    </div>
+    <div class="actions">
+      <label class="snap">
+        Snap
+        <select id="snap-size" title="Drag positions round to this grid step">
+          <option value="0.1">0.1</option>
+          <option value="0.5">0.5</option>
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="0">off</option>
+        </select>
+      </label>
+      <div class="view-toggle">
+        <button id="btn-view-2d" type="button" class="secondary active">2D</button>
+        <button id="btn-view-3d" type="button" class="secondary">3D</button>
+      </div>
+      <input  id="file-input" type="file" accept=".mapjson,.json,.zip" hidden />
+      <input  id="icon-input" type="file" accept="image/png,image/jpeg" hidden />
+      <input  id="catalog-input" type="file" accept=".json" hidden />
+      <button id="btn-catalog" type="button" class="secondary" title="Load the plugin's sbg-asset-catalog.json for the asset picker">Load catalog…</button>
+      <label class="icon-chip" title="Custom icon used in manifest + Thunderstore (256×256 recommended)">
+        <img id="icon-preview" alt="icon" />
+        <button id="btn-icon" type="button" class="secondary">Icon…</button>
+        <button id="btn-icon-clear" type="button" class="secondary" title="Use auto-generated icon">×</button>
+      </label>
+      <select id="samples-picker" class="secondary" title="Load a starter map (replaces current work)">
+        <option value="">Samples…</option>
+      </select>
+      <button id="btn-open"   type="button" class="secondary">Open…</button>
+      <button id="btn-reset"  type="button" class="secondary" title="Clear the editor + autosave">Reset</button>
+      <button id="btn-preview" type="button" class="secondary" title="Show the zip contents before downloading">Preview</button>
+      <button id="btn-export" type="button">Export .zip</button>
+    </div>
+  </header>
+
+  <div id="validation" class="hidden"></div>
+
+  <!-- Export preview modal (shown by btn-preview) -->
+  <div id="preview-modal" hidden>
+    <div class="preview-body">
+      <div class="preview-header">
+        <strong id="preview-filename">package.zip</strong>
+        <span id="preview-totalsize" class="note">—</span>
+        <button id="btn-preview-close" type="button" class="secondary">×</button>
+      </div>
+      <table id="preview-entries"><thead><tr><th>file</th><th>size</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <main>
+    <aside id="palette">
+      <h2>Add</h2>
+      <!-- Buttons populated by palette.js from the primitive schema -->
+    </aside>
+
+    <section id="viewport">
+      <canvas id="view2d"></canvas>
+      <canvas id="view3d" hidden></canvas>
+      <div id="view-hud">
+        <span id="hud-cursor">0.0, 0.0</span>
+        <span id="hud-zoom">1.0×</span>
+      </div>
+      <button id="btn-help" type="button" class="help-fab" title="Keyboard shortcuts">?</button>
+      <div id="help-panel" hidden>
+        <h3>Keyboard &amp; mouse</h3>
+        <ul>
+          <li><kbd>Click</kbd> select</li>
+          <li><kbd>Shift</kbd>+click toggle selection</li>
+          <li><kbd>Shift</kbd>+drag on empty marquee select</li>
+          <li><kbd>Drag</kbd> selected to move the whole group</li>
+          <li><kbd>Del</kbd> / <kbd>Backspace</kbd> remove selection</li>
+          <li><kbd>Ctrl</kbd>+<kbd>D</kbd> duplicate selection</li>
+          <li><kbd>Ctrl</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> redo</li>
+          <li><kbd>Esc</kbd> clear selection</li>
+          <li><kbd>Mouse wheel</kbd> zoom (2D) / dolly (3D)</li>
+          <li><kbd>Alt</kbd>+drag or <kbd>right</kbd>-drag on empty pan (2D) / orbit (3D)</li>
+        </ul>
+      </div>
+    </section>
+
+    <aside id="inspector">
+      <h2>Inspector</h2>
+      <div id="inspector-body">
+        <p class="empty">Select an object to edit.</p>
+      </div>
+
+      <h2>Description</h2>
+      <textarea id="meta-description" rows="5" placeholder="Ships in the Thunderstore README."></textarea>
+    </aside>
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

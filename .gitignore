@@ -1,0 +1,33 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.*.swp
+
+# Logs from local dev servers
+*.log
+
+# Accidental Node scaffolding — this is a static site, no build step.
+node_modules/
+package.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+dist/
+build/
+.cache/
+
+# Local run-off files
+.env
+.env.*
+*.local
+
+# Agent / scratch
+.agent-scratch/
